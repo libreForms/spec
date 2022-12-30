@@ -50,51 +50,51 @@ These components correspond to the metadata used to define behind-the-scenes for
 
 ### Example
 
-Here is an example form implemented using python dictionaries, where configs are denoted using leading underscores. Note `Pass_Field` has a field-specific configuration, which theoretically makes the field's appearance depend on a specific value in `Radio_Field`.
+Here is an example form implemented using python dictionaries, where configs are denoted using leading underscores. Note `Pass_Field` has a field-specific configuration, which theoretically makes the field's appearance depend on a specific value in `Radio_Field`. Further, `Text_Field` includes a condition that the output data must be at least six characters long.
 
 ```python
 forms = {
     "sample-form": {
         "Text_Field": {
-            "input_field": {"type": "text", "content": ["NA"]},
-            "output_data": {"type": "str", "required": False, "validators": [lambda p: len(p) >= 6], '_description': "this is a text field"},
+            "input_field": {"type": "text", "content": ["NA"], "required": False, '_description': "this is a text field"},
+            "output_data": {"type": "str", "validators": [lambda p: len(p) >= 6],},
         },
         "Pass_Field": {
-            "input_field": {"type": "password", "content": [""]},
-            "output_data": {"type": "str", "required": False, "validators": [], '_description': "this is a password field"},
+            "input_field": {"type": "password", "content": [""], "required": False, '_description': "this is a password field"},
+            "output_data": {"type": "str", "validators": [],},
             "_depends_on": ("Radio_Field", "Option"),
         },
         "Radio_Field": {
-            "input_field": {"type": "radio", "content": ["Pick", "An", "Option"]},
-            "output_data": {"type": "str", "required": False, "validators": [], '_description': "this is a radio field"},
+            "input_field": {"type": "radio", "content": ["Pick", "An", "Option"], "required": False, '_description': "this is a radio field"},
+            "output_data": {"type": "str", "validators": [],},
         },
         "Select_Field": {
-            "input_field": {"type": "select", "content": ["Pick", "An", "Option"]},
-            "output_data": {"type": "str", "required": False, "validators": [], '_description': "this is a select / dropdown field"},
+            "input_field": {"type": "select", "content": ["Pick", "An", "Option"], "required": False, '_description': "this is a select / dropdown field"},
+            "output_data": {"type": "str", "validators": [],},
         },
         "Check_Field": {
-            "input_field": {"type": "checkbox", "content": ["Pick", "An", "Option"]},
-            "output_data": {"type": "list", "required": False, "validators": [], '_description': "this is a checkbox field"},
+            "input_field": {"type": "checkbox", "content": ["Pick", "An", "Option"], "required": False, '_description': "this is a checkbox field"},
+            "output_data": {"type": "list", "validators": [],},
         },
         "Date_Field": {
-            "input_field": {"type": "date", "content": []},
-            "output_data": {"type": "str", "required": False, "validators": [], '_description': "this is a date field"},
+            "input_field": {"type": "date", "content": [], "required": False, '_description': "this is a date field"},
+            "output_data": {"type": "str", "validators": [],},
         },
         "Hidden_Field": {
-            "input_field": {"type": "hidden", "content": ["This field is hidden"]},
-            "output_data": {"type": "str", "required": False, "validators": [], '_description': "this is a hidden field"},
+            "input_field": {"type": "hidden", "content": ["This field is hidden"], "required": False, '_description': "this is a hidden field"},
+            "output_data": {"type": "str", "validators": [],},
         },
         "Float_Field": {
-            "input_field": {"type": "number", "content": [0]},
-            "output_data": {"type": "float", "required": False, "validators": [], '_description': "this is a float field"},
+            "input_field": {"type": "number", "content": [0], "required": False,  '_description': "this is a float field"},
+            "output_data": {"type": "float", "validators": [],}
         }, 
         "Int_Field": {
-            "input_field": {"type": "number", "content": [0]},
-            "output_data": {"type": "int", "required": False, "validators": [], '_description': "this is an int field"},
+            "input_field": {"type": "number", "content": [0], "required": False, '_description': "this is an int field"},
+            "output_data": {"type": "int", "validators": [],},
         }, 
         "File_Field": {
             "input_field": {"type": "file", "content": [None]}, 
-            "output_data": {"type": 'string', "validators": []},
+            "output_data": {"type": 'string', "validators": [],},
         },
         "_dashboard": {                 
             "type": "scatter",           
