@@ -28,6 +28,22 @@ The libreForms API allows organizations to simply define every aspect of a form.
 
 With these problems in mind, the libreForms API is written to prioritize customization, ease of use, and control. It uses a declarative approach to define forms, and employs a relatively flat data structure to minimize the complexity of form configurations. It leaves significant freedom to implementers to allow arbitrary form customization and tight control over the resultant form data. 
 
+
+#### Flat data
+
+
+#### Future-proof
+
+
+
+#### Gap-fillers
+This approach places a heavy emphasis on clearly-defined default behavior to serve as gap-fillers when form and field configs are left unspecified. This allows for predictable behavior and reduces the business of the form template, but increases the work of implementers to robustly define default behaviors.
+
+#### Openness-by-default 
+
+
+
+
 ### Form Fields
 
 These components correspond to the data that an end-user will submit along with the form. Each form field should contain details about the input and output data, while optionally containing further field configuration details.
@@ -42,7 +58,7 @@ This component defines how the form data will be parsed by the server. For examp
 
 #### Field Configs
 
-This component defines granular behavior for a given form field. For example, For example, on web-based implementations, this will provide details on whether only users with a certain role assignment be able to see a form field, whether the visibility or available options should depend on the values of another form field, or whether this form field should be used to trigger some other behavior in the underling implementation.
+This component defines granular behavior for a given form field. For example, For example, on web-based implementations, this will provide details on whether only users with a certain role assignment be able to see a form field, whether the visibility or available options should depend on the values of another form field, whether to visually group this field with other fields, whether this form field should be used to trigger some other behavior in the underling implementation.
 
 ### Form Configs
 
