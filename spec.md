@@ -30,18 +30,14 @@ With these problems in mind, the libreForms API is written to prioritize customi
 
 
 #### Flat data
-
+This approach generally tries to avoid nesting data in an effort to reduce the complexity of the form templates that it produces. At the same time, its declarative approach helps avoid repetition.
 
 #### Future-proof
-
+The abstractness and flexibility of this approach goes a long way to generally making it future proof, with some exceptions. Form field inputs are rather tightly coupled with web-based forms. Further, form field outputs are generally structured to conform to most relational and document databases.
 
 
 #### Gap-fillers
 This approach places a heavy emphasis on clearly-defined default behavior to serve as gap-fillers when form and field configs are left unspecified. This allows for predictable behavior and reduces the business of the form template, but increases the work of implementers to robustly define default behaviors.
-
-#### Openness-by-default 
-
-
 
 
 ### Form Fields
