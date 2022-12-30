@@ -1,5 +1,21 @@
 # libreForms Specification
 
+## Contents
+1. [Summary](#summary)
+2. [Principles](#principles)
+    - [Flat data](#flat-data)
+    - [Future-proof](#future-proof)
+    - [Gap-fillers](#gap-fillers)
+3. [Form Fields](#principles)
+    - [Input](#input)
+    - [Output](#output)
+    - [Field Configs](#field-configs)
+4. [Form Configs](#principles)
+5. [Example](#example)
+
+
+## Summary
+
 This document describes the libreForms API, a declarative form-manager abstraction linking frontend form fields with their corresponding backend data structures, both of which can be written in a language of the implementer's choice. 
 
 At it's core, libreForms divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some marker like leading underscores (see example below). Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
