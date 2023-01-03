@@ -6,13 +6,13 @@
     - [Flat data](#flat-data)
     - [Future-proof](#future-proof)
     - [Strong defaults](#strong-defaults)
-    - [Reserved characters](#reserved-characters)
 3. [Form Fields](#principles)
     - [Input](#input)
     - [Output](#output)
     - [Field Configs](#field-configs)
 4. [Form Configs](#principles)
-5. [Example](#example)
+5. [Reserved characters](#reserved-characters)
+6. [Example](#example)
     - [Python dictionaries](#python-dictionaries)
     - [YAML](#yaml)
 
@@ -56,10 +56,6 @@ The flexibility of this approach goes a long way to generally making it future p
 #### Strong defaults
 This approach places a heavy emphasis on clearly-defined default behavior to serve as gap-fillers when form and field configs are left unspecified. This allows for predictable behavior and reduces the business of the form template, but increases the work of implementers to robustly define default behaviors.
 
-#### Reserved characters
-As discussed above, this approach relies heavily upon the judicious use of reserved characters, typically a leading undescore, to denote aspects of the form that should not be made visible to end users but rather parsed in some other way. For this reason, form names should generally not include a leading underscore (so backends can use this notation to mark submissions for deletion), and field names should never include underscores to ensure they are not incorrectly parsed as configs.
-
-
 ### Form Fields
 
 These components correspond to the data that an end-user will submit along with the form. Each form field should contain details about the input and output data, while optionally containing further field configuration details.
@@ -79,6 +75,17 @@ This component defines granular behavior for a given form field. For example, Fo
 ### Form Configs
 
 These components correspond to the metadata used to define behind-the-scenes form behavior. For example, they might be used to define how form data can be visualized, what user groups or roles are able to submit forms or view others' submitted forms, and whether to route form submissions through an approval process.
+
+### Reserved characters
+As discussed above, this approach relies heavily upon the judicious use of reserved characters to denote aspects of the form that should not be made visible to end users but rather parsed in some other way. Typically, a leading undescore is used but can be replaced by implementers with a character better suited to their needs. This reserved character should be employed in form configs and field configs but never employed in form names or field names.
+
+This approach allows implementers to build a few assumption into how they manage their forms. First, knowing that form field data will never contain the reserved character in the leading position allows the datastore to use that character for its own metadata, which may significantly overlap with or differ from the form and field configs. 
+
+For example, let's say an implementer is employing a Document database to store form data. They want to store a nested metadata field, which they don't want to be treated like actual form data. They can add a field called `_metadata` during form post-processing with the confidence that this will not collide with any form fields. This is especially useful when you do not know the structure of the form data you are managing at the time of implementation.
+
+In addition, since form names should never contained the reserved character in the leading position, implementers can use this to retire forms submissions or mark them for deletion without removing them from the datatore entirely (`move COLLECTION.SUBMISSION_ID to _COLLECTION`), removing it from the forms that will be parsed by the system. 
+
+Field names should never include the reserved character in the leading position to ensure they are not incorrectly parsed as configs.
 
 ### Examples
 
