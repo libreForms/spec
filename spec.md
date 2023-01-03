@@ -12,7 +12,8 @@
     - [Field Configs](#field-configs)
 4. [Form Configs](#principles)
 5. [Example](#example)
-
+    - [Python dictionaries](#python-dictionaries)
+    - [YAML](#yaml)
 
 ## Summary
 
