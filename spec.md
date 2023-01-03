@@ -20,7 +20,7 @@
 
 This document describes the libreForms API, a declarative form-manager abstraction linking frontend form fields with their corresponding backend data structures, both of which can be written in a language of the implementer's choice. 
 
-At it's core, libreForms divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some marker like leading underscores (see example below). Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
+At its core, libreForms divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some marker like leading underscores (see example below). Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
 
 ```
 FORMS
@@ -42,9 +42,9 @@ FORMS
 
 ### Principles
 
-The libreForms API allows organizations to simply define every aspect of a form. Legacy tools for managing institutional form data, like hand-signed and PDF documents, are incompatible with the need to manage form data at scale without significantly increasing adminsitrative burden. Most browser-based form managers give form administrators little control over form fields, the resulting data, or the underlying web application. Proprietary solutions seldom provide both self-hosting support and a viable licensing model.
+The libreForms API allows organizations to more simply define every aspect of a form. Legacy tools for managing institutional form data, like hand-signed and PDF documents, are incompatible with the need to manage form data at scale without significantly increasing adminsitrative burden. Most browser-based form managers give form administrators little control over form fields, the resulting data, or the underlying web application. Proprietary solutions seldom provide both self-hosting support and a viable licensing model.
 
-With these problems in mind, the libreForms API is written to prioritize customization, ease of use, and control. It uses a declarative approach to define forms, and employs a relatively flat data structure to minimize the complexity of form configurations. It leaves significant freedom to implementers to allow arbitrary form customization and tight control over the resultant form data. 
+With these problems in mind, the libreForms API is written to prioritize customization, ease of use, and control. It uses a declarative approach to define forms and employs a relatively flat data structure to minimize the complexity of form configurations. It leaves significant freedom to implementers to allow arbitrary form customization and tight control over the resultant form data. 
 
 
 #### Flat data
@@ -54,7 +54,7 @@ This approach generally tries to avoid nesting data in an effort to reduce the c
 The flexibility of this approach goes a long way to generally making it future proof, with some exceptions. Form field inputs are rather tightly coupled with web-based forms. Further, form field outputs are generally structured to conform to most relational and document databases.
 
 #### Strong defaults
-This approach places a heavy emphasis on clearly-defined default behavior to serve as gap-fillers when form and field configs are left unspecified. This allows for predictable behavior and reduces the business of the form template, but increases the work of implementers to robustly define default behaviors.
+This approach places a heavy emphasis on clearly-defined default behavior to serve as gap-fillers when form and field configs are left unspecified. This allows for predictable behavior and reduces the verbosity of the form template, but increases the work of implementers to robustly define default behaviors.
 
 ### Form Fields
 
@@ -62,7 +62,7 @@ These components correspond to the data that an end-user will submit along with 
 
 #### Input 
 
-This component defines how the form field will appear to the client. For example, on web-based implementations, this will provide details about the HTML field that it will generate, including the input type, its description, whether its required, its default values, or a list of available options.
+This component defines how the form field will appear to the client. For example, on web-based implementations, this will provide details about the HTML field that it will generate, including the input type, its description, whether it's required, its default values, or a list of available options.
 
 #### Output 
 
@@ -70,20 +70,20 @@ This component defines how the form data will be parsed by the server. For examp
 
 #### Field Configs
 
-This component defines granular behavior for a given form field. For example, For example, on web-based implementations, this will provide details on whether only users with a certain role assignment be able to see a form field, whether the visibility or available options should depend on the values of another form field, whether to visually group this field with other fields, whether this form field should be used to trigger some other behavior in the underling implementation.
+This component defines granular behavior for a given form field.For example, on web-based implementations, this will provide details on whether only users with a certain role assignment are able to see a form field, whether the visibility or available options should depend on the values of another form field, whether to visually group this field with other fields, and whether this form field should be used to trigger some other behavior in the underlying implementation.
 
 ### Form Configs
 
 These components correspond to the metadata used to define behind-the-scenes form behavior. For example, they might be used to define how form data can be visualized, what user groups or roles are able to submit forms or view others' submitted forms, and whether to route form submissions through an approval process.
 
 ### Reserved characters
-As discussed above, this approach relies heavily upon the judicious use of reserved characters to denote aspects of the form that should not be made visible to end users but rather parsed in some other way. Typically, a leading undescore is used but can be replaced by implementers with a character better suited to their needs. This reserved character should be employed in form configs and field configs but never employed in form names or field names.
+As discussed above, this approach relies heavily upon the judicious use of reserved characters to denote aspects of the form that should not be made visible to end users but rather parsed in some other way. Typically, a leading underscore is used but can be replaced by implementers with a character better suited to their needs. This reserved character should be employed in form configs and field configs but never employed in form names or field names.
 
 This approach allows implementers to build a few assumption into how they manage their forms. First, knowing that form field data will never contain the reserved character in the leading position allows the datastore to use that character for its own metadata, which may significantly overlap with or differ from the form and field configs. 
 
 For example, let's say an implementer is employing a Document database to store form data. They want to store a nested metadata field, which they don't want to be treated like actual form data. They can add a field called `_metadata` during form post-processing with the confidence that this will not collide with any form fields. This is especially useful when you do not know the structure of the form data you are managing at the time of implementation.
 
-In addition, since form names should never contained the reserved character in the leading position, implementers can use this to retire forms submissions or mark them for deletion without removing them from the datatore entirely (`move COLLECTION.SUBMISSION_ID to _COLLECTION`), removing it from the forms that will be parsed by the system. 
+In addition, since form names should never contain the reserved character in the leading position, implementers can use this to retire forms submissions or mark them for deletion without removing them from the datastore entirely (`move COLLECTION.SUBMISSION_ID to _COLLECTION`), removing it from the forms that will be parsed by the system. 
 
 Field names should never include the reserved character in the leading position to ensure they are not incorrectly parsed as configs.
 
