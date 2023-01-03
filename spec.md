@@ -46,14 +46,16 @@ With these problems in mind, the libreForms API is written to prioritize customi
 
 
 #### Flat data
-This approach generally tries to avoid nesting data in an effort to reduce the complexity of the form templates that it produces. At the same time, its declarative approach helps avoid repetition.
+This approach generally tries to avoid nesting data in an effort to reduce the complexity of the form templates that it produces. It accomplishes this through a judicious use of reserved characters, typically the underscore. At the same time, its declarative approach helps avoid repetition.
 
-#### Future-proof
-The abstractness and flexibility of this approach goes a long way to generally making it future proof, with some exceptions. Form field inputs are rather tightly coupled with web-based forms. Further, form field outputs are generally structured to conform to most relational and document databases.
+#### Future-proof abstractness
+The flexibility of this approach goes a long way to generally making it future proof, with some exceptions. Form field inputs are rather tightly coupled with web-based forms. Further, form field outputs are generally structured to conform to most relational and document databases.
 
-
-#### Gap-fillers
+#### Strong defaults
 This approach places a heavy emphasis on clearly-defined default behavior to serve as gap-fillers when form and field configs are left unspecified. This allows for predictable behavior and reduces the business of the form template, but increases the work of implementers to robustly define default behaviors.
+
+#### Reserved characters
+As discussed above, this approach relies heavily upon the judicious use of reserved characters, typically a leading undescore, to denote aspects of the form that should not be made visible to end users but rather parsed in some other way. For this reason, form names should generally not include a leading underscore (so backends can use this notation to mark submissions for deletion), and field names should never include underscores to ensure they are not incorrectly parsed as configs.
 
 
 ### Form Fields
@@ -76,7 +78,7 @@ This component defines granular behavior for a given form field. For example, Fo
 
 These components correspond to the metadata used to define behind-the-scenes form behavior. For example, they might be used to define how form data can be visualized, what user groups or roles are able to submit forms or view others' submitted forms, and whether to route form submissions through an approval process.
 
-### Example
+### Examples
 
 Here is an example form implemented using python dictionaries, where configs are denoted using leading underscores. Note `Pass_Field` has a field-specific configuration, which theoretically makes the field's appearance depend on a specific value in `Radio_Field`. Further, `Text_Field` includes a condition that the output data must be at least six characters long.
 
@@ -131,6 +133,7 @@ forms = {
                 "y": "Int_Field",       
                 "color": "Text_Field"
             },
+        },
         "_allow_repeat": False, 
         "_description": "This is an example form.", 
         "_allow_anonymous_access": False, 
