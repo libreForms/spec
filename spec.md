@@ -50,7 +50,7 @@ With these problems in mind, the libreForms API is written to prioritize customi
 #### Flat data
 This approach generally tries to avoid nesting data in an effort to reduce the complexity of the form templates that it produces. It accomplishes this through a judicious use of reserved characters, typically the underscore. At the same time, its declarative approach helps avoid repetition.
 
-#### Future-proof abstractness
+#### Future-proof
 The flexibility of this approach goes a long way to generally making it future proof, with some exceptions. Form field inputs are rather tightly coupled with web-based forms. Further, form field outputs are generally structured to conform to most relational and document databases.
 
 #### Strong defaults
