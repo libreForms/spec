@@ -258,7 +258,7 @@ sample-form:
     output_data:
       type: str
       validators:
-      - !!python/name:__main__.%3Clambda%3E ''
+      - min_length: 6
   _dashboard:
     fields:
       color: Text_Field
