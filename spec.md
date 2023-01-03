@@ -80,7 +80,9 @@ These components correspond to the metadata used to define behind-the-scenes for
 
 ### Examples
 
-Here is an example form implemented using python dictionaries, where configs are denoted using leading underscores. Note `Pass_Field` has a field-specific configuration, which theoretically makes the field's appearance depend on a specific value in `Radio_Field`. Further, `Text_Field` includes a condition that the output data must be at least six characters long.
+Here are some example forms implemented with different approaches, where configs are denoted using leading underscores. Note `Pass_Field` has a field-specific configuration, which theoretically makes the field's appearance depend on a specific value in `Radio_Field`. Further, `Text_Field` includes a condition that the output data must be at least six characters long.
+
+#### python dictionaries
 
 ```python
 forms = {
@@ -142,4 +144,129 @@ forms = {
         "_suppress_default_values": False, 
     },
 }
+```
+
+#### YAML
+
+```yaml
+sample-form:
+  Check_Field:
+    input_field:
+      _description: this is a checkbox field
+      content:
+      - Pick
+      - An
+      - Option
+      required: false
+      type: checkbox
+    output_data:
+      type: list
+      validators: []
+  Date_Field:
+    input_field:
+      _description: this is a date field
+      content: []
+      required: false
+      type: date
+    output_data:
+      type: str
+      validators: []
+  File_Field:
+    input_field:
+      content:
+      - null
+      type: file
+    output_data:
+      type: string
+      validators: []
+  Float_Field:
+    input_field:
+      _description: this is a float field
+      content:
+      - 0
+      required: false
+      type: number
+    output_data:
+      type: float
+      validators: []
+  Hidden_Field:
+    input_field:
+      _description: this is a hidden field
+      content:
+      - This field is hidden
+      required: false
+      type: hidden
+    output_data:
+      type: str
+      validators: []
+  Int_Field:
+    input_field:
+      _description: this is an int field
+      content:
+      - 0
+      required: false
+      type: number
+    output_data:
+      type: int
+      validators: []
+  Pass_Field:
+    _depends_on: !!python/tuple
+    - Radio_Field
+    - Option
+    input_field:
+      _description: this is a password field
+      content:
+      - ''
+      required: false
+      type: password
+    output_data:
+      type: str
+      validators: []
+  Radio_Field:
+    input_field:
+      _description: this is a radio field
+      content:
+      - Pick
+      - An
+      - Option
+      required: false
+      type: radio
+    output_data:
+      type: str
+      validators: []
+  Select_Field:
+    input_field:
+      _description: this is a select / dropdown field
+      content:
+      - Pick
+      - An
+      - Option
+      required: false
+      type: select
+    output_data:
+      type: str
+      validators: []
+  Text_Field:
+    input_field:
+      _description: this is a text field
+      content:
+      - NA
+      required: false
+      type: text
+    output_data:
+      type: str
+      validators:
+      - !!python/name:__main__.%3Clambda%3E ''
+  _dashboard:
+    fields:
+      color: Text_Field
+      x: Timestamp
+      y: Int_Field
+    type: scatter
+  _allow_anonymous_access: false
+  _allow_csv_templates: true
+  _allow_repeat: false
+  _allow_uploads: true
+  _description: This is an example form.
+  _suppress_default_values: false
 ```
