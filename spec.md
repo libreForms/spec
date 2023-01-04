@@ -5,7 +5,7 @@
 2. [Principles](#principles)
     - [Flat data](#flat-data)
     - [Future-proof](#future-proof)
-    - [Strong defaults](#strong-defaults)
+    - [Default values](#default-values)
 3. [Form Fields](#principles)
     - [Input](#input)
     - [Output](#output)
@@ -20,7 +20,7 @@
 
 This document describes the libreForms API, a declarative form-manager abstraction linking frontend form fields with their corresponding backend data structures, both of which can be written in a language of the implementer's choice. 
 
-At its core, libreForms divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some marker like leading underscores (see example below). Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
+At its core, libreForms divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some [reserved character](#reserved-characters) like leading underscores. Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
 
 ```
 FORMS
@@ -42,10 +42,9 @@ FORMS
 
 ### Principles
 
-The libreForms API allows organizations to more simply define every aspect of a form. Legacy tools for managing institutional form data, like hand-signed and PDF documents, are incompatible with the need to manage form data at scale without significantly increasing adminsitrative burden. Most browser-based form managers give form administrators little control over form fields, the resulting data, or the underlying web application. Proprietary solutions seldom provide both self-hosting support and a viable licensing model.
+The libreForms API allows organizations to define every aspect of a form. Legacy tools for managing institutional form data, like hand-signed and PDF documents, are incompatible with the modern need to manage form data at scale without significantly increasing adminsitrative burden. Most browser-based form managers give form administrators little control over form fields, the resulting data, or the underlying web application. Proprietary solutions seldom provide both self-hosting support, access to the source code, and a viable licensing model.
 
-With these problems in mind, the libreForms API is written to prioritize customization, ease of use, and control. It uses a declarative approach to define forms and employs a relatively flat data structure to minimize the complexity of form configurations. It leaves significant freedom to implementers to allow arbitrary form customization and tight control over the resultant form data. 
-
+The libreForms API is written to prioritize customization, ease of use, and control. It uses a declarative approach to define forms and employs a relatively flat data structure to minimize the complexity of form configurations. It leaves significant freedom to implementers to allow arbitrary form customization and tight control over the resultant form data, while discouraging boilerplate through the extensive use of default values.
 
 #### Flat data
 This approach generally tries to avoid nesting data in an effort to reduce the complexity of the form templates that it produces. It accomplishes this through a judicious use of reserved characters, typically the underscore. At the same time, its declarative approach helps avoid repetition.
@@ -53,8 +52,8 @@ This approach generally tries to avoid nesting data in an effort to reduce the c
 #### Future-proof
 The flexibility of this approach goes a long way to generally making it future proof, with some exceptions. Form field inputs are rather tightly coupled with web-based forms. Further, form field outputs are generally structured to conform to most relational and document databases.
 
-#### Strong defaults
-This approach places a heavy emphasis on clearly-defined default behavior to serve as gap-fillers when form and field configs are left unspecified. This allows for predictable behavior and reduces the verbosity of the form template, but increases the work of implementers to robustly define default behaviors.
+#### Default values
+This approach places a heavy emphasis on clearly-defined default behavior to serve as gap-fillers when form and field configs are left unspecified. This allows for predictable behavior and reduces boilerplate and general verbosity in the form template, but increases the work of implementers to robustly define default behavior for end users.
 
 ### Form Fields
 
@@ -170,7 +169,6 @@ sample-form:
       type: checkbox
     output_data:
       type: list
-      validators: []
   Date_Field:
     input_field:
       _description: this is a date field
@@ -179,7 +177,6 @@ sample-form:
       type: date
     output_data:
       type: str
-      validators: []
   File_Field:
     input_field:
       content:
@@ -187,7 +184,6 @@ sample-form:
       type: file
     output_data:
       type: string
-      validators: []
   Float_Field:
     input_field:
       _description: this is a float field
@@ -197,7 +193,6 @@ sample-form:
       type: number
     output_data:
       type: float
-      validators: []
   Hidden_Field:
     input_field:
       _description: this is a hidden field
@@ -207,7 +202,6 @@ sample-form:
       type: hidden
     output_data:
       type: str
-      validators: []
   Int_Field:
     input_field:
       _description: this is an int field
@@ -217,7 +211,6 @@ sample-form:
       type: number
     output_data:
       type: int
-      validators: []
   Pass_Field:
     _depends_on: !!python/tuple
     - Radio_Field
@@ -230,7 +223,6 @@ sample-form:
       type: password
     output_data:
       type: str
-      validators: []
   Radio_Field:
     input_field:
       _description: this is a radio field
@@ -242,7 +234,6 @@ sample-form:
       type: radio
     output_data:
       type: str
-      validators: []
   Select_Field:
     input_field:
       _description: this is a select / dropdown field
@@ -254,7 +245,6 @@ sample-form:
       type: select
     output_data:
       type: str
-      validators: []
   Text_Field:
     input_field:
       _description: this is a text field
