@@ -172,7 +172,8 @@ sample-form:
   Date_Field:
     input_field:
       _description: this is a date field
-      content: []
+      content: 
+      - ''
       required: false
       type: date
     output_data:
@@ -212,9 +213,8 @@ sample-form:
     output_data:
       type: int
   Pass_Field:
-    _depends_on: !!python/tuple
-    - Radio_Field
-    - Option
+    _depends_on:
+      Radio_Field: Option
     input_field:
       _description: this is a password field
       content:
