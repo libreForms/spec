@@ -18,9 +18,7 @@
 
 ## Summary
 
-This document describes the libreForms API, a declarative form-manager abstraction linking frontend form fields with their corresponding backend data structures, both of which can be written in a language of the implementer's choice. 
-
-At its core, libreForms divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some [reserved character](#reserved-characters) like leading underscores. Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
+This document describes the libreForms API, a declarative abstraction optimized for managing administrative forms. At its core, the API divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some [reserved character](#reserved-characters) like leading underscores. Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
 
 ```
 FORMS
@@ -39,6 +37,8 @@ FORMS
 |-> Form_B
     ...
 ```
+
+The API is well-suited to a RESTful or distributed approach, where various clients might manage a different forms and employ different access controls, but store form data using a remote server accessed by API token. This approach has the added benefit of decoupling the frontend form fields from the resultant backend data structures. However, the API works just as well in an all-in-one application.
 
 ### Principles
 
