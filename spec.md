@@ -28,11 +28,11 @@ FORMS
 |   |-> Form_Field_A
 |   |   |-> Input_Specifications
 |   |   |-> Output_Specifications
-|   |   |-> Field_Config
+|   |   |-> _Field_Config
 |   |-> Form_Field_B
 |   |   |-> Input_Specifications
 |   |   |-> Output_Specifications
-|   |   |-> Field_Config
+|   |   |-> _Field_Config
 |   |-> _Form_Config_A
 |   |-> _Form_Config_B
 |
