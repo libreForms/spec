@@ -6,19 +6,19 @@
     - [Flat data](#flat-data)
     - [Future-proof](#future-proof)
     - [Default values](#default-values)
-3. [Form Fields](#principles)
+3. [Form Fields](#form-fields)
     - [Input](#input)
     - [Output](#output)
     - [Field Configs](#field-configs)
-4. [Form Configs](#principles)
+4. [Form Configs](#form-configs)
 5. [Reserved characters](#reserved-characters)
-6. [Example](#example)
+6. [Examples](#examples)
     - [Python dictionaries](#python-dictionaries)
     - [YAML](#yaml)
 
 ## Summary
 
-This document describes the libreForms API, a declarative abstraction optimized for managing administrative forms. At its core, the API divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some [reserved character](#reserved-characters) like leading underscores. Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
+This document describes the libreForms API, a declarative abstraction optimized for managing institutional forms. At its core, the API divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some [reserved character](#reserved-characters), like a leading underscore. Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
 
 ```
 FORMS
@@ -38,7 +38,7 @@ FORMS
     ...
 ```
 
-The API is well-suited to a RESTful or distributed approach, where various clients might manage a different forms and employ different access controls, but store form data using a remote server accessed by API token. This approach has the added benefit of decoupling the frontend form fields from the resultant backend data structures. However, the API works just as well in an all-in-one application.
+The API is well-suited to a RESTful or distributed approach, where various clients might manage a different forms and employ different access controls, but store form data using a remote server accessed by API token. This approach has the added benefit of decoupling the frontend form fields from the resultant backend data structures. However, the API works in an all-in-one application when administrators have a strong grasp of their form structure at the time of deployment.
 
 ### Principles
 
@@ -57,7 +57,7 @@ This approach places a heavy emphasis on clearly-defined default behavior to ser
 
 ### Form Fields
 
-These components correspond to the data that an end-user will submit along with the form. Each form field should contain details about the input and output data, while optionally containing further field configuration details.
+These components define the structure of the form data generated from user input. Each form field should contain details about the input and output data, while optionally including more granular field configuration details.
 
 #### Input 
 
@@ -69,13 +69,14 @@ This component defines how the form data will be parsed by the server. For examp
 
 #### Field Configs
 
-This component defines granular behavior for a given form field.For example, on web-based implementations, this will provide details on whether only users with a certain role assignment are able to see a form field, whether the visibility or available options should depend on the values of another form field, whether to visually group this field with other fields, and whether this form field should be used to trigger some other behavior in the underlying implementation.
+This component defines granular behavior for a given form field. For example, on web-based implementations, this could provide details on which user groups are able to see a form field, whether the visibility or available options should depend on the values of another form field, whether to visually group this field with other fields, and whether this form field should be used to trigger some other behavior in the underlying implementation.
 
 ### Form Configs
 
-These components correspond to the metadata used to define behind-the-scenes form behavior. For example, they might be used to define how form data can be visualized, what user groups or roles are able to submit forms or view others' submitted forms, and whether to route form submissions through an approval process.
+These components define form behavior at the client and application level, but are not generally made visible to users. For example, they might be used to define how form data can be visualized, what user groups or roles are able to submit forms or view others' submitted forms, or whether to route form submissions through an approval process.
 
 ### Reserved characters
+
 As discussed above, this approach relies heavily upon the judicious use of reserved characters to denote aspects of the form that should not be made visible to end users but rather parsed in some other way. Typically, a leading underscore is used but can be replaced by implementers with a character better suited to their needs. This reserved character should be employed in form configs and field configs but never employed in form names or field names.
 
 This approach allows implementers to build a few assumption into how they manage their forms. First, knowing that form field data will never contain the reserved character in the leading position allows the datastore to use that character for its own metadata, which may significantly overlap with or differ from the form and field configs. 
@@ -96,45 +97,55 @@ Here are some example forms implemented with different approaches, where configs
 forms = {
     "sample-form": {
         "Text_Field": {
-            "input_field": {"type": "text", "content": ["NA"], "required": False, '_description': "this is a text field"},
+            "input_field": {"type": "text", "content": ["NA"], "required": False,},
             "output_data": {"type": "str", "validators": [lambda p: len(p) >= 6],},
+            '_description': "this is a text field",
         },
         "Pass_Field": {
-            "input_field": {"type": "password", "content": [""], "required": False, '_description': "this is a password field"},
+            "input_field": {"type": "password", "content": [""], "required": False,},
             "output_data": {"type": "str", "validators": [],},
             "_depends_on": ("Radio_Field", "Option"),
+            '_description':  "this is a password field",
         },
         "Radio_Field": {
-            "input_field": {"type": "radio", "content": ["Pick", "An", "Option"], "required": False, '_description': "this is a radio field"},
+            "input_field": {"type": "radio", "content": ["Pick", "An", "Option"], "required": False,},
             "output_data": {"type": "str", "validators": [],},
+            '_description': "this is a radio field",
         },
         "Select_Field": {
-            "input_field": {"type": "select", "content": ["Pick", "An", "Option"], "required": False, '_description': "this is a select / dropdown field"},
+            "input_field": {"type": "select", "content": ["Pick", "An", "Option"], "required": False,},
             "output_data": {"type": "str", "validators": [],},
+            '_description': "this is a select / dropdown field",
         },
         "Check_Field": {
-            "input_field": {"type": "checkbox", "content": ["Pick", "An", "Option"], "required": False, '_description': "this is a checkbox field"},
+            "input_field": {"type": "checkbox", "content": ["Pick", "An", "Option"], "required": False,},
             "output_data": {"type": "list", "validators": [],},
+            '_description': "this is a checkbox field",
         },
         "Date_Field": {
-            "input_field": {"type": "date", "content": [], "required": False, '_description': "this is a date field"},
+            "input_field": {"type": "date", "content": [], "required": False,},
             "output_data": {"type": "str", "validators": [],},
+            '_description': "this is a date field",
         },
         "Hidden_Field": {
-            "input_field": {"type": "hidden", "content": ["This field is hidden"], "required": False, '_description': "this is a hidden field"},
+            "input_field": {"type": "hidden", "content": ["This field is hidden"], "required": False,},
             "output_data": {"type": "str", "validators": [],},
+            '_description': "this is a hidden field",
         },
         "Float_Field": {
-            "input_field": {"type": "number", "content": [0], "required": False,  '_description': "this is a float field"},
-            "output_data": {"type": "float", "validators": [],}
+            "input_field": {"type": "number", "content": [0], "required": False,},
+            "output_data": {"type": "float", "validators": [],},
+            '_description': "this is a float field"
         }, 
         "Int_Field": {
-            "input_field": {"type": "number", "content": [0], "required": False, '_description': "this is an int field"},
+            "input_field": {"type": "number", "content": [0], "required": False,},
             "output_data": {"type": "int", "validators": [],},
+            '_description': "this is an int field",
         }, 
         "File_Field": {
             "input_field": {"type": "file", "content": [None]}, 
             "output_data": {"type": 'string', "validators": [],},
+            '_description': "this is a file upload field"
         },
         "_dashboard": {                 
             "type": "scatter",           
@@ -160,7 +171,6 @@ forms = {
 sample-form:
   Check_Field:
     input_field:
-      _description: this is a checkbox field
       content:
       - Pick
       - An
@@ -169,15 +179,16 @@ sample-form:
       type: checkbox
     output_data:
       type: list
+    _description: this is a checkbox field
   Date_Field:
     input_field:
-      _description: this is a date field
       content: 
       - ''
       required: false
       type: date
     output_data:
       type: str
+    _description: this is a date field
   File_Field:
     input_field:
       content:
@@ -185,38 +196,39 @@ sample-form:
       type: file
     output_data:
       type: string
+    _description: this is a file upload field
   Float_Field:
     input_field:
-      _description: this is a float field
       content:
       - 0
       required: false
       type: number
     output_data:
       type: float
+    _description: this is a float field
   Hidden_Field:
     input_field:
-      _description: this is a hidden field
       content:
       - This field is hidden
       required: false
       type: hidden
     output_data:
       type: str
+    _description: this is a hidden field
   Int_Field:
     input_field:
-      _description: this is an int field
       content:
       - 0
       required: false
       type: number
     output_data:
       type: int
+    _description: this is an int field
   Pass_Field:
     _depends_on:
       Radio_Field: Option
+    _description: this is a password field
     input_field:
-      _description: this is a password field
       content:
       - ''
       required: false
@@ -225,7 +237,6 @@ sample-form:
       type: str
   Radio_Field:
     input_field:
-      _description: this is a radio field
       content:
       - Pick
       - An
@@ -234,9 +245,9 @@ sample-form:
       type: radio
     output_data:
       type: str
+    _description: this is a radio field
   Select_Field:
     input_field:
-      _description: this is a select / dropdown field
       content:
       - Pick
       - An
@@ -245,9 +256,9 @@ sample-form:
       type: select
     output_data:
       type: str
+    _description: this is a select / dropdown field
   Text_Field:
     input_field:
-      _description: this is a text field
       content:
       - NA
       required: false
@@ -256,6 +267,7 @@ sample-form:
       type: str
       validators:
       - min_length: 6
+    _description: this is a text field
   _dashboard:
     fields:
       color: Text_Field
