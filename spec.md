@@ -100,13 +100,13 @@ These components define form behavior at the client and application level, but a
 
 As discussed above, this approach relies heavily upon the judicious use of reserved characters to denote aspects of the form that should not be made visible to end users but rather parsed in some other way. Typically, a leading underscore is used but can be replaced by implementers with a character better suited to their needs. This reserved character should be employed in form configs and field configs but never employed in form names or field names.
 
-This approach allows implementers to build a few assumptions into how they manage their forms. First, knowing that form field data will never contain the reserved character in the leading position allows the datastore to use that character for its own metadata, which may significantly overlap with or differ from the form and field configs. 
+This approach allows implementers to build a few assumptions into how they manage their forms. First, knowing that form field data will never contain the reserved character in the leading position allows the application backend to employ that character for its own metadata, which may significantly overlap with or differ from the form and field configs, when writing to the datastore. 
 
-For example, let's say an implementer is employing a Document database to store form data. They want to store a nested metadata field, which they don't want to be treated like actual form data. They can add some arbitrary field containing additional metadata, maybe called `_metadata`, during form post-processing with the confidence that this will not collide with any form fields. This is especially useful when you do not know the structure of the form data you are managing at the time of implementation.
+For example, let's say an implementer is employing a Document database to store form data. They want to store a nested metadata field, which they don't want to be treated like actual form data. They can add some arbitrary field called `_metadata` during form post-processing with the confidence that this will not collide with any form fields. This is especially useful when you do not know the structure of the form data you are managing at the time of implementation.
 
-In addition, since form names should never contain the reserved character in the leading position, implementers can use this to retire forms submissions or mark them for deletion without removing them from the datastore entirely (`move COLLECTION.SUBMISSION_ID to _COLLECTION`), removing it from the forms that will be parsed by the system. 
+In addition, since form names should never contain the reserved character in the leading position, implementers can use this to retire forms submissions or mark them for deletion without removing them from the datastore entirely (`move COLLECTION.SUBMISSION_ID to _COLLECTION`), removing it from the collection of forms that will be parsed by the application. 
 
-Field names should never include the reserved character in the leading position to ensure they are not incorrectly parsed as configs.
+Field names should never include the reserved character in the leading position to ensure they are not incorrectly parsed as configs by the application.
 
 ## Examples
 
