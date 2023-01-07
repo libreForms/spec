@@ -2,17 +2,18 @@
 
 ## Contents
 1. [Summary](#summary)
-2. [Principles](#principles)
+2. [Definitions](#definitions)
+3. [Principles](#principles)
     - [Flat data](#flat-data)
     - [Future-proof](#future-proof)
     - [Default values](#default-values)
-3. [Form Fields](#form-fields)
+4. [Form Fields](#form-fields)
     - [Input](#input)
     - [Output](#output)
     - [Field Configs](#field-configs)
-4. [Form Configs](#form-configs)
-5. [Reserved characters](#reserved-characters)
-6. [Examples](#examples)
+5. [Form Configs](#form-configs)
+6. [Reserved characters](#reserved-characters)
+7. [Examples](#examples)
     - [Python dictionaries](#python-dictionaries)
     - [YAML](#yaml)
 
@@ -45,6 +46,22 @@ The API is well-suited to a RESTful or distributed approach, where various clien
 The API works just as effectively in an all-in-one application where the submission and processing of form data occur within the same application context, espcially when administrators have a strong grasp of their form structure at the time of deployment. However, such situations seldom require the use of reserved characters to diffrentiate between form data and metadata, so the API design and its use of reserved characters may seem redundant in such environments.
 
 
+
+## Definitions
+
+This document extensively employs the key terminology defined below.  
+
+#### Form configuration
+
+This term is used to refer to configuration files containing form-building data, as shown in the [examples](#examples) below. Unfortunately, this term may appear confusing when used alongside terms like [form configs](#form-configs), which refer to specific configurations applied on a form-by-form basis and employ [reserved characters](#reserved-characters) to set themselves apart from [form fields](#form-fields).
+
+#### Networked
+
+This term is used, often alongside similar terms like 'distributed' or 'RESTful', to describe environments where form data is transferred over a network, for example using HTTP methods like `GET` and `POST`.
+
+#### Declarative 
+
+This term is used to describe a type of [form configuration](#form-configuration) that describes how forms should look and behave, without actually needing to write the logic that achieves that end state.
 
 ### Principles
 
@@ -87,7 +104,7 @@ As discussed above, this approach relies heavily upon the judicious use of reser
 
 This approach allows implementers to build a few assumption into how they manage their forms. First, knowing that form field data will never contain the reserved character in the leading position allows the datastore to use that character for its own metadata, which may significantly overlap with or differ from the form and field configs. 
 
-For example, let's say an implementer is employing a Document database to store form data. They want to store a nested metadata field, which they don't want to be treated like actual form data. They can add a field called `_metadata` during form post-processing with the confidence that this will not collide with any form fields. This is especially useful when you do not know the structure of the form data you are managing at the time of implementation.
+For example, let's say an implementer is employing a Document database to store form data. They want to store a nested metadata field, which they don't want to be treated like actual form data. They can add some arbitrary field containing additional metadata, maybe called `_metadata`, during form post-processing with the confidence that this will not collide with any form fields. This is especially useful when you do not know the structure of the form data you are managing at the time of implementation.
 
 In addition, since form names should never contain the reserved character in the leading position, implementers can use this to retire forms submissions or mark them for deletion without removing them from the datastore entirely (`move COLLECTION.SUBMISSION_ID to _COLLECTION`), removing it from the forms that will be parsed by the system. 
 
