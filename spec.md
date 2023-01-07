@@ -18,7 +18,7 @@
 
 ## Summary
 
-This document describes the libreForms API, a declarative abstraction optimized for managing institutional forms. At its core, the API divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some [reserved character](#reserved-characters), like a leading underscore. Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
+This document describes the libreForms API, a declarative abstraction optimized for managing institutional forms over a network. At its core, the API divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some [reserved character](#reserved-characters), like a leading underscore. Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
 
 ```
 FORMS
@@ -38,26 +38,32 @@ FORMS
     ...
 ```
 
-The API is well-suited to a RESTful or distributed approach, where various clients might manage a different forms and employ different access controls, but store form data using a remote server accessed by API token. This approach has the added benefit of decoupling the frontend form fields from the resultant backend data structures. However, the API works in an all-in-one application when administrators have a strong grasp of their form structure at the time of deployment.
+The API is well-suited to a RESTful or distributed approach, where various clients might manage a different forms and employ different access controls, but store form data using a remote server accessed by API token. The use of reserved characters is especially useful in helping implementers build assumptions about the form data they will receive over the network: namely, that no data passed to the server that contains the reserved character in its name is form data, but instead can be treated as form metadata. This approach has the added benefit of decoupling the frontend form fields from the resultant backend data structures. 
+
+
+
+The API works just as effectively in an all-in-one application where the submission and processing of form data occur within the same application context, espcially when administrators have a strong grasp of their form structure at the time of deployment. However, such situations seldom require the use of reserved characters to diffrentiate between form data and metadata, so the API design and its use of reserved characters may seem redundant in such environments.
+
+
 
 ### Principles
 
-The libreForms API allows organizations to define every aspect of a form. Legacy tools for managing institutional form data, like hand-signed and PDF documents, are incompatible with the modern need to manage form data at scale without significantly increasing adminsitrative burden. Most browser-based form managers give form administrators little control over form fields, the resulting data, or the underlying web application. Proprietary solutions seldom provide both self-hosting support, access to the source code, and a viable licensing model.
+The libreForms API is a generalization that allows organizations to define every aspect of their forms. Legacy tools for managing institutional form data, like hand-signed and PDF documents, are incompatible with the modern need to manage form data at scale without significantly increasing adminsitrative burden. Most browser-based form managers give form administrators little control over form fields, the resulting data, or the underlying web application. Proprietary solutions seldom provide self-hosting support, access to the source code, and a viable licensing model.
 
-The libreForms API is written to prioritize customization, ease of use, and control. It uses a declarative approach to define forms and employs a relatively flat data structure to minimize the complexity of form configurations. It leaves significant freedom to implementers to allow arbitrary form customization and tight control over the resultant form data, while discouraging boilerplate through the extensive use of default values.
+The libreForms API is written to prioritize customization, ease of use, and control. It uses a declarative approach to define forms and employs a relatively flat data structure to minimize the complexity, and maximize the readability, of form configurations. It leaves significant freedom to implementers to allow arbitrary form customization and tight control over the resultant form data, while encouraging implementers to make extensive use of default values to reduce boilerplate.
 
 #### Flat data
-This approach generally tries to avoid nesting data in an effort to reduce the complexity of the form templates that it produces. It accomplishes this through a judicious use of reserved characters, typically the underscore. At the same time, its declarative approach helps avoid repetition.
+This approach generally tries to avoid nesting data in an effort to reduce the complexity of the form configurations that it produces. It accomplishes this through a judicious use of reserved characters, typically the underscore. At the same time, its declarative approach helps avoid repetition. This simplicity and predictability may also have the added benefit of improving the human-readability of form configurations. 
 
 #### Future-proof
-The flexibility of this approach goes a long way to generally making it future proof, with some exceptions. Form field inputs are rather tightly coupled with web-based forms. Further, form field outputs are generally structured to conform to most relational and document databases.
+The flexibility and abstractness of this approach goes a long way to making it future proof. However, there are some limits to this approach: first, form field inputs are rather tightly coupled with web-based forms; second, form field outputs are generally structured to conform to most relational and document databases; third, the use of reserved characters is most effective when data is being transferred over a network using approaches like REST, while it might not be as well-optimized for other environments.
 
 #### Default values
-This approach places a heavy emphasis on clearly-defined default behavior to serve as gap-fillers when form and field configs are left unspecified. This allows for predictable behavior and reduces boilerplate and general verbosity in the form template, but increases the work of implementers to robustly define default behavior for end users.
+This approach places a heavy emphasis on clearly-defined default behavior to serve as gap-fillers when form and field configs are left unspecified. This allows for predictable behavior and reduces boilerplate and general verbosity in the form configuration, but increases the work of implementers to robustly define default behavior for end users.
 
 ### Form Fields
 
-These components define the structure of the form data generated from user input. Each form field should contain details about the input and output data, while optionally including more granular field configuration details.
+These components define the structure of the form data generated from user input. Each form field should contain details about the input and output data, while optionally including more granular field config details.
 
 #### Input 
 
@@ -89,7 +95,7 @@ Field names should never include the reserved character in the leading position 
 
 ### Examples
 
-Here are some example forms implemented with different approaches, where configs are denoted using leading underscores. Note `Pass_Field` has a field-specific configuration, which theoretically makes the field's appearance depend on a specific value in `Radio_Field`. Further, `Text_Field` includes a condition that the output data must be at least six characters long.
+Here are some example forms implemented with different approaches, where configs are denoted using leading underscores. Note `Pass_Field` has a field-specific configs, which theoretically makes the field's appearance depend on a specific value in `Radio_Field`. Further, `Text_Field` includes a condition that the output data must be at least six characters long.
 
 #### python dictionaries
 
