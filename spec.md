@@ -8,8 +8,8 @@
     - [Future-proof](#future-proof)
     - [Default values](#default-values)
 4. [Form Fields](#form-fields)
-    - [Input](#input)
-    - [Output](#output)
+    - [Input specifications](#input-specifications)
+    - [Output specifications](#output-specifications)
     - [Field Configs](#field-configs)
 5. [Form Configs](#form-configs)
 6. [Reserved characters](#reserved-characters)
@@ -82,11 +82,11 @@ This approach places a heavy emphasis on clearly-defined default behavior to ser
 
 These components define the structure of the form data generated from user input. Each form field should contain details about the input and output data, while optionally including more granular field config details.
 
-#### Input 
+#### Input specifications
 
 This component defines how the form field will appear to the client. For example, on web-based implementations, this will provide details about the HTML field that it will generate, including the input type, its description, whether it's required, its default values, or a list of available options.
 
-#### Output 
+#### Output specifications
 
 This component defines how the form data will be parsed by the server. For example, on web-based implementations, this will provide details on what type or structure the data should conform to and any conditions that the data should pass, like length or character requirements.
 
