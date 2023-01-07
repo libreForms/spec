@@ -22,7 +22,7 @@
 This document describes the libreForms API, a declarative abstraction optimized for managing institutional forms over a network. At its core, the API divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some [reserved character](#reserved-characters), like a leading underscore. Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
 
 ```
-FORMS
+Form Configuration
 |-> Form_A
 |   |-> Form_Field_A
 |   |   |-> Input_Specifications
