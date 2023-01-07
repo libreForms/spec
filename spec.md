@@ -248,9 +248,6 @@ sample-form:
       type: int
     _description: this is an int field
   Pass_Field:
-    _depends_on:
-      Radio_Field: Option
-    _description: this is a password field
     input_field:
       content:
       - ''
@@ -258,6 +255,9 @@ sample-form:
       type: password
     output_data:
       type: str
+    _depends_on:
+      Radio_Field: Option
+    _description: this is a password field
   Radio_Field:
     input_field:
       content:
