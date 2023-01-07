@@ -49,8 +49,6 @@ The API works just as effectively in an all-in-one application where the submiss
 
 ## Definitions
 
-This document extensively employs the key terminology defined below.  
-
 #### Form configuration
 
 This term is used to refer to configuration files containing form-building data, as shown in the [examples](#examples) below. Unfortunately, this term may appear confusing when used alongside terms like [form configs](#form-configs), which refer to specific configurations applied on a form-by-form basis and employ [reserved characters](#reserved-characters) to set themselves apart from [form fields](#form-fields).
@@ -63,7 +61,7 @@ This term is used, often alongside similar terms like 'distributed' or 'RESTful'
 
 This term is used to describe a type of [form configuration](#form-configuration) that describes how forms should look and behave, without actually needing to write the logic that achieves that end state.
 
-### Principles
+## Principles
 
 The libreForms API is a generalization that allows organizations to define every aspect of their forms. Legacy tools for managing institutional form data, like hand-signed and PDF documents, are incompatible with the modern need to manage form data at scale without significantly increasing administrative burden. Most browser-based form managers give form administrators little control over form fields, the resulting data, or the underlying web application. Proprietary solutions seldom provide self-hosting support, access to the source code, and a viable licensing model.
 
@@ -78,7 +76,7 @@ The flexibility and abstractness of this approach goes a long way to making it f
 #### Default values
 This approach places a heavy emphasis on clearly-defined default behavior to serve as gap-fillers when form and field configs are left unspecified. This allows for predictable behavior and reduces boilerplate and general verbosity in the form configuration, but increases the work of implementers to robustly define default behavior for end users.
 
-### Form Fields
+## Form Fields
 
 These components define the structure of the form data generated from user input. Each form field should contain details about the input and output data, while optionally including more granular field config details.
 
@@ -94,11 +92,11 @@ This component defines how the form data will be parsed by the server. For examp
 
 This component defines granular behavior for a given form field. For example, on web-based implementations, this could provide details on which user groups are able to see a form field, whether the visibility or available options should depend on the values of another form field, whether to visually group this field with other fields, and whether this form field should be used to trigger some other behavior in the underlying implementation.
 
-### Form Configs
+## Form Configs
 
 These components define form behavior at the client and application level, but are not generally made visible to users. For example, they might be used to define how form data can be visualized, what user groups or roles are able to submit forms or view others' submitted forms, or whether to route form submissions through an approval process.
 
-### Reserved characters
+## Reserved characters
 
 As discussed above, this approach relies heavily upon the judicious use of reserved characters to denote aspects of the form that should not be made visible to end users but rather parsed in some other way. Typically, a leading underscore is used but can be replaced by implementers with a character better suited to their needs. This reserved character should be employed in form configs and field configs but never employed in form names or field names.
 
@@ -110,7 +108,7 @@ In addition, since form names should never contain the reserved character in the
 
 Field names should never include the reserved character in the leading position to ensure they are not incorrectly parsed as configs.
 
-### Examples
+## Examples
 
 Here are some example forms implemented with different approaches, where configs are denoted using leading underscores. Note `Pass_Field` has a field-specific configs, which theoretically makes the field's appearance depend on a specific value in `Radio_Field`. Further, `Text_Field` includes a condition that the output data must be at least six characters long.
 
