@@ -41,11 +41,11 @@ FORMS
 
 The API is well-suited to a RESTful or distributed approach, where various clients might manage a different forms and employ different access controls, but store form data using a remote server accessed by API token. The use of reserved characters is especially useful in helping implementers build assumptions about the form data they will receive over the network: namely, that no data passed to the server that contains the reserved character in its name is form data, but instead can be treated as form metadata. This approach has the added benefit of decoupling the frontend form fields from the resultant backend data structures. 
 
-
+![example RESTful architecture](assets/RESTful_libreForms_Architecture.drawio.svg)
 
 The API works just as effectively in an all-in-one application where the submission and processing of form data occur within the same application context, espcially when administrators have a strong grasp of their form structure at the time of deployment. However, such situations seldom require the use of reserved characters to diffrentiate between form data and metadata, so the API design and its use of reserved characters may seem redundant in such environments.
 
-
+![example single application architecture](assets/Single_App_libreForms_Architecture.drawio.svg)
 
 ## Definitions
 
