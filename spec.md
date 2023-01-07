@@ -39,11 +39,11 @@ FORMS
     ...
 ```
 
-The API is well-suited to a RESTful or distributed approach, where various clients might manage a different forms and employ different access controls, but store form data using a remote server accessed by API token. The use of reserved characters is especially useful in helping implementers build assumptions about the form data they will receive over the network: namely, that no data passed to the server that contains the reserved character in its name is form data, but instead can be treated as form metadata. This approach has the added benefit of decoupling the frontend form fields from the resultant backend data structures. 
+The API is well-suited to a RESTful or distributed approach, where various clients might manage different forms and employ different access controls, but store form data using a remote server accessed by API token. The use of reserved characters is especially useful in helping implementers build assumptions about the form data they will receive over the network: namely, that no data passed to the server that contains the reserved character in its name is form data, but instead can be treated as form metadata. This approach has the added benefit of decoupling the frontend form fields from the resultant backend data structures. 
 
 ![example RESTful architecture](assets/RESTful_libreForms_Architecture.drawio.svg)
 
-The API works just as effectively in an all-in-one application where the submission and processing of form data occur within the same application context, espcially when administrators have a strong grasp of their form structure at the time of deployment. However, such situations seldom require the use of reserved characters to diffrentiate between form data and metadata, so the API design and its use of reserved characters may seem redundant in such environments.
+The API works just as effectively in an all-in-one application where the submission and processing of form data occur within the same application context, especially when administrators have a strong grasp of their form structure at the time of deployment. However, such situations seldom require the use of reserved characters to differentiate between form data and metadata, so the API design and its use of reserved characters may seem redundant in such environments.
 
 ![example single application architecture](assets/Single_App_libreForms_Architecture.drawio.svg)
 
@@ -65,7 +65,7 @@ This term is used to describe a type of [form configuration](#form-configuration
 
 ### Principles
 
-The libreForms API is a generalization that allows organizations to define every aspect of their forms. Legacy tools for managing institutional form data, like hand-signed and PDF documents, are incompatible with the modern need to manage form data at scale without significantly increasing adminsitrative burden. Most browser-based form managers give form administrators little control over form fields, the resulting data, or the underlying web application. Proprietary solutions seldom provide self-hosting support, access to the source code, and a viable licensing model.
+The libreForms API is a generalization that allows organizations to define every aspect of their forms. Legacy tools for managing institutional form data, like hand-signed and PDF documents, are incompatible with the modern need to manage form data at scale without significantly increasing administrative burden. Most browser-based form managers give form administrators little control over form fields, the resulting data, or the underlying web application. Proprietary solutions seldom provide self-hosting support, access to the source code, and a viable licensing model.
 
 The libreForms API is written to prioritize customization, ease of use, and control. It uses a declarative approach to define forms and employs a relatively flat data structure to minimize the complexity, and maximize the readability, of form configurations. It leaves significant freedom to implementers to allow arbitrary form customization and tight control over the resultant form data, while encouraging implementers to make extensive use of default values to reduce boilerplate.
 
@@ -102,7 +102,7 @@ These components define form behavior at the client and application level, but a
 
 As discussed above, this approach relies heavily upon the judicious use of reserved characters to denote aspects of the form that should not be made visible to end users but rather parsed in some other way. Typically, a leading underscore is used but can be replaced by implementers with a character better suited to their needs. This reserved character should be employed in form configs and field configs but never employed in form names or field names.
 
-This approach allows implementers to build a few assumption into how they manage their forms. First, knowing that form field data will never contain the reserved character in the leading position allows the datastore to use that character for its own metadata, which may significantly overlap with or differ from the form and field configs. 
+This approach allows implementers to build a few assumptions into how they manage their forms. First, knowing that form field data will never contain the reserved character in the leading position allows the datastore to use that character for its own metadata, which may significantly overlap with or differ from the form and field configs. 
 
 For example, let's say an implementer is employing a Document database to store form data. They want to store a nested metadata field, which they don't want to be treated like actual form data. They can add some arbitrary field containing additional metadata, maybe called `_metadata`, during form post-processing with the confidence that this will not collide with any form fields. This is especially useful when you do not know the structure of the form data you are managing at the time of implementation.
 
