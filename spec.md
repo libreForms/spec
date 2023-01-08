@@ -306,6 +306,166 @@ sample-form:
 
 #### JSON
 
-```json
-{"sample-form": {"Check_Field": {"input_field": {"content": ["Pick", "An", "Option"], "required": false, "type": "checkbox"}, "output_data": {"type": "list"}, "_description": "this is a checkbox field"}, "Date_Field": {"input_field": {"content": [""], "required": false, "type": "date"}, "output_data": {"type": "str"}, "_description": "this is a date field"}, "File_Field": {"input_field": {"content": [null], "type": "file"}, "output_data": {"type": "string"}, "_description": "this is a file upload field"}, "Float_Field": {"input_field": {"content": [0], "required": false, "type": "number"}, "output_data": {"type": "float"}, "_description": "this is a float field"}, "Hidden_Field": {"input_field": {"content": ["This field is hidden"], "required": false, "type": "hidden"}, "output_data": {"type": "str"}, "_description": "this is a hidden field"}, "Int_Field": {"input_field": {"content": [0], "required": false, "type": "number"}, "output_data": {"type": "int"}, "_description": "this is an int field"}, "Pass_Field": {"input_field": {"content": [""], "required": false, "type": "password"}, "output_data": {"type": "str"}, "_depends_on": {"Radio_Field": "Option"}, "_description": "this is a password field"}, "Radio_Field": {"input_field": {"content": ["Pick", "An", "Option"], "required": false, "type": "radio"}, "output_data": {"type": "str"}, "_description": "this is a radio field"}, "Select_Field": {"input_field": {"content": ["Pick", "An", "Option"], "required": false, "type": "select"}, "output_data": {"type": "str"}, "_description": "this is a select / dropdown field"}, "Text_Field": {"input_field": {"content": ["NA"], "required": false, "type": "text"}, "output_data": {"type": "str", "validators": [{"min_length": 6}]}, "_description": "this is a text field"}, "_dashboard": {"fields": {"color": "Text_Field", "x": "Timestamp", "y": "Int_Field"}, "type": "scatter"}, "_allow_anonymous_access": false, "_allow_csv_templates": true, "_allow_repeat": false, "_allow_uploads": true, "_description": "This is an example form.", "_suppress_default_values": false}}
+```javascript
+{
+  "sample-form": {
+    "Check_Field": {
+      "input_field": {
+        "content": [
+          "Pick",
+          "An",
+          "Option"
+        ],
+        "required": false,
+        "type": "checkbox"
+      },
+      "output_data": {
+        "type": "list"
+      },
+      "_description": "this is a checkbox field"
+    },
+    "Date_Field": {
+      "input_field": {
+        "content": [
+          ""
+        ],
+        "required": false,
+        "type": "date"
+      },
+      "output_data": {
+        "type": "str"
+      },
+      "_description": "this is a date field"
+    },
+    "File_Field": {
+      "input_field": {
+        "content": [
+          null
+        ],
+        "type": "file"
+      },
+      "output_data": {
+        "type": "string"
+      },
+      "_description": "this is a file upload field"
+    },
+    "Float_Field": {
+      "input_field": {
+        "content": [
+          0
+        ],
+        "required": false,
+        "type": "number"
+      },
+      "output_data": {
+        "type": "float"
+      },
+      "_description": "this is a float field"
+    },
+    "Hidden_Field": {
+      "input_field": {
+        "content": [
+          "This field is hidden"
+        ],
+        "required": false,
+        "type": "hidden"
+      },
+      "output_data": {
+        "type": "str"
+      },
+      "_description": "this is a hidden field"
+    },
+    "Int_Field": {
+      "input_field": {
+        "content": [
+          0
+        ],
+        "required": false,
+        "type": "number"
+      },
+      "output_data": {
+        "type": "int"
+      },
+      "_description": "this is an int field"
+    },
+    "Pass_Field": {
+      "input_field": {
+        "content": [
+          ""
+        ],
+        "required": false,
+        "type": "password"
+      },
+      "output_data": {
+        "type": "str"
+      },
+      "_depends_on": {
+        "Radio_Field": "Option"
+      },
+      "_description": "this is a password field"
+    },
+    "Radio_Field": {
+      "input_field": {
+        "content": [
+          "Pick",
+          "An",
+          "Option"
+        ],
+        "required": false,
+        "type": "radio"
+      },
+      "output_data": {
+        "type": "str"
+      },
+      "_description": "this is a radio field"
+    },
+    "Select_Field": {
+      "input_field": {
+        "content": [
+          "Pick",
+          "An",
+          "Option"
+        ],
+        "required": false,
+        "type": "select"
+      },
+      "output_data": {
+        "type": "str"
+      },
+      "_description": "this is a select / dropdown field"
+    },
+    "Text_Field": {
+      "input_field": {
+        "content": [
+          "NA"
+        ],
+        "required": false,
+        "type": "text"
+      },
+      "output_data": {
+        "type": "str",
+        "validators": [
+          {
+            "min_length": 6
+          }
+        ]
+      },
+      "_description": "this is a text field"
+    },
+    "_dashboard": {
+      "fields": {
+        "color": "Text_Field",
+        "x": "Timestamp",
+        "y": "Int_Field"
+      },
+      "type": "scatter"
+    },
+    "_allow_anonymous_access": false,
+    "_allow_csv_templates": true,
+    "_allow_repeat": false,
+    "_allow_uploads": true,
+    "_description": "This is an example form.",
+    "_suppress_default_values": false
+  }
+}
 ```
