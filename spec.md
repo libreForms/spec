@@ -2,18 +2,19 @@
 
 ## Contents
 1. [Summary](#summary)
-2. [Definitions](#definitions)
-3. [Principles](#principles)
+2. [Architecture](#architecture)
+3. [Definitions](#definitions)
+4. [Principles](#principles)
     - [Flat data](#flat-data)
     - [Future-proof](#future-proof)
     - [Default values](#default-values)
-4. [Form Fields](#form-fields)
+5. [Form Fields](#form-fields)
     - [Input specifications](#input-specifications)
     - [Output specifications](#output-specifications)
     - [Field Configs](#field-configs)
-5. [Form Configs](#form-configs)
-6. [Reserved characters](#reserved-characters)
-7. [Examples](#examples)
+6. [Form Configs](#form-configs)
+7. [Reserved characters](#reserved-characters)
+8. [Examples](#examples)
     - [Python dictionaries](#python-dictionaries)
     - [YAML](#yaml)
     - [JSON](#json)
@@ -39,6 +40,8 @@ Form Configuration
 |-> Form_B
     ...
 ```
+
+## Architecture
 
 The API is well-suited to a RESTful or distributed approach, where various clients might manage different forms and employ different access controls, but store form data using a remote server accessed by API token. The use of reserved characters is especially useful in helping implementers build assumptions about the form data they will receive over the network: namely, that no data passed to the server that contains the reserved character in its name is form data, but instead can be treated as form metadata. This approach has the added benefit of decoupling the frontend form fields from the resultant backend data structures. Generally, RESTful approaches will store a separate, unique form configuration on each client, and the server will store minimal form configuration data, if any.
 
