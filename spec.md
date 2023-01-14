@@ -1,47 +1,67 @@
 # libreForms Specification
 
 ## Contents
-1. [Summary](#summary)
-2. [Architecture](#architecture)
-3. [Definitions](#definitions)
-4. [Principles](#principles)
-    - [Flat data](#flat-data)
-    - [Future-proof](#future-proof)
-    - [Default values](#default-values)
-5. [Form Fields](#form-fields)
-    - [Input specifications](#input-specifications)
-    - [Output specifications](#output-specifications)
-    - [Field Configs](#field-configs)
-6. [Form Configs](#form-configs)
-7. [Reserved characters](#reserved-characters)
-8. [Examples](#examples)
-    - [Python dictionaries](#python-dictionaries)
-    - [YAML](#yaml)
-    - [JSON](#json)
+1. [Overview](#overview)
+  - [Definitions](#definitions)
+  - [Architecture](#architecture)
+  - [Assumptions](#assumptions)
+  - [Security](#security)
+  - [Principles](#principles)
+      - [Flat data](#flat-data)
+      - [Future-proof](#future-proof)
+      - [Default values](#default-values)
+2. [Form Configuration Language](#form-configuration-language)
+  - [Form Fields](#form-fields)
+      - [Input specifications](#input-specifications)
+      - [Output specifications](#output-specifications)
+      - [Field Configs](#field-configs)
+  - [Form Configs](#form-configs)
+  - [Reserved characters](#reserved-characters)
+  - [Examples](#examples)
+      - [Python dictionaries](#python-dictionaries)
+      - [YAML](#yaml)
+      - [JSON](#json)
 
-## Summary
+3. [Communication Protocol](#communication-protocol)
 
-This document describes the libreForms API, a declarative abstraction optimized for managing institutional forms over a network. At its core, the API divides each form into (a) form fields, which are further specified based on their input, output, and field configs; and (b) form configs, which further define form behavior. Form and field configs are generally denoted in their name using some [reserved character](#reserved-characters), like a leading underscore. Implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules.
 
-```
-Form Configuration
-|-> Form_A
-|   |-> Form_Field_A
-|   |   |-> Input_Specifications
-|   |   |-> Output_Specifications
-|   |   |-> _Field_Config
-|   |-> Form_Field_B
-|   |   |-> Input_Specifications
-|   |   |-> Output_Specifications
-|   |   |-> _Field_Config
-|   |-> _Form_Config_A
-|   |-> _Form_Config_B
-|
-|-> Form_B
-    ...
-```
+## Overview
 
-## Architecture
+This document describes the libreForms API, a form configuration language, and associated communication protocol built on HTTP requests, optimized for managing institutional forms over a network. 
+
+At its core, the libreForms configuration language divides a form into its fields and configs. A field is an element of a form that an end user will generally see and interact with. Fields are generally comprised of input and output specifications. Input specifications describe the type of field the end user will see and interact with. Output specifications describe the data type and/or structure that the field data will be treated as after the form is submitted. 
+
+A config is an element of a form that an end user does not necessarily see or interact with, but which modifies the behavior of the form in the client. Configs are generally denoted in their name using some [reserved character](#reserved-characters), like a leading underscore, though implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules. The following visualization gives an example of a traditional form (left) and that same form written as a libreForms form configuration (right).
+
+![Form example](assets/Example_form.drawio.svg)
+
+After a form is submitted by an end user, the client will process the form data such that each field conforms to the data type described in its output specification. At this point, the form data can be communicated to a server over a network using HTTP requests. Because configs generally define behavior in the client, and as a result will not pass to the server, the same [reserved character](#reserved-characters) used for configs can be used for metadata that the server will store. This means that the server does not need to know the structure of the data, nor access a copy of the form configuration.
+
+### Definitions
+
+#### Form configuration
+
+This term is used to refer to configuration files containing form-building data, as shown in the [examples](#examples) below. Unfortunately, this term may appear confusing when used alongside terms like [form configs](#form-configs), which refer to specific configurations applied on a form-by-form basis and employ [reserved characters](#reserved-characters) to set themselves apart from [form fields](#form-fields).
+
+#### Network
+
+This term is used, often alongside similar terms like 'distributed' or 'RESTful', to describe environments where form data is transferred over a network, for example using HTTP methods like `GET` and `POST`.
+
+#### Declarative 
+
+This term is used to describe a type of [form configuration](#form-configuration) that describes how forms should look and behave, without actually needing to write the logic that achieves that end state.
+
+### Assumptions
+
+- HTTP/S
+
+- Web-based forms
+
+- Document-style database
+
+- single reserved character used consistently throughout
+
+### Architecture
 
 The API is well-suited to a RESTful or distributed approach, where various clients might manage different forms and employ different access controls, but store form data using a remote server accessed by API token. The use of reserved characters is especially useful in helping implementers build assumptions about the form data they will receive over the network: namely, that no data passed to the server that contains the reserved character in its name is form data, but instead can be treated as form metadata. This approach has the added benefit of decoupling the frontend form fields from the resultant backend data structures. Generally, RESTful approaches will store a separate, unique form configuration on each client, and the server will store minimal form configuration data, if any.
 
@@ -51,21 +71,17 @@ The API works just as effectively in an all-in-one application where the submiss
 
 ![example single application architecture](assets/Single_App_libreForms_Architecture.drawio.svg)
 
-## Definitions
 
-#### Form configuration
+### Security
 
-This term is used to refer to configuration files containing form-building data, as shown in the [examples](#examples) below. Unfortunately, this term may appear confusing when used alongside terms like [form configs](#form-configs), which refer to specific configurations applied on a form-by-form basis and employ [reserved characters](#reserved-characters) to set themselves apart from [form fields](#form-fields).
+- Control over scope at the server level
+- Clients by default should not be able to see / query each other's form data - enforced through the API key scope
+- Admin console or programmatically determine scope.
+- clients handle auth at their level - within organizations, externalized auth (AD, OAUTH) highly recommended for consistency across clients (and consistency of the data stored on the backend, which does not clean up data by default)
+- form configurations exist at the client level, and need not share with each other
 
-#### Networked
 
-This term is used, often alongside similar terms like 'distributed' or 'RESTful', to describe environments where form data is transferred over a network, for example using HTTP methods like `GET` and `POST`.
-
-#### Declarative 
-
-This term is used to describe a type of [form configuration](#form-configuration) that describes how forms should look and behave, without actually needing to write the logic that achieves that end state.
-
-## Principles
+### Principles
 
 The libreForms API is a generalization that allows organizations to define every aspect of their forms. Legacy tools for managing institutional form data, like hand-signed and PDF documents, are incompatible with the modern need to manage form data at scale without significantly increasing administrative burden. Most browser-based form managers give form administrators little control over form fields, the resulting data, or the underlying web application. Proprietary solutions seldom provide self-hosting support, access to the source code, and a viable licensing model.
 
@@ -80,7 +96,10 @@ The flexibility and abstractness of this approach goes a long way to making it f
 #### Default values
 This approach places a heavy emphasis on clearly-defined default behavior to serve as gap-fillers when form and field configs are left unspecified. This allows for predictable behavior and reduces boilerplate and general verbosity in the form configuration, but increases the work of implementers to robustly define default behavior for end users.
 
-## Form Fields
+## Form Configuration Language
+
+
+### Form Fields
 
 These components define the structure of the form data generated from user input. Each form field should contain details about the input and output data, while optionally including more granular field config details.
 
@@ -96,11 +115,11 @@ This component defines how the form data will be parsed by the server. For examp
 
 This component defines granular behavior for a given form field. For example, on web-based implementations, this could provide details on which user groups are able to see a form field, whether the visibility or available options should depend on the values of another form field, whether to visually group this field with other fields, and whether this form field should be used to trigger some other behavior in the underlying implementation.
 
-## Form Configs
+### Form Configs
 
 These components define form behavior at the client and application level, but are not generally made visible to users. For example, they might be used to define how form data can be visualized, what user groups or roles are able to submit forms or view others' submitted forms, or whether to route form submissions through an approval process.
 
-## Reserved characters
+### Reserved characters
 
 As discussed above, this approach relies heavily upon the judicious use of reserved characters to denote aspects of the form that should not be made visible to end users but rather parsed in some other way. Typically, a leading underscore is used but can be replaced by implementers with a character better suited to their needs. This reserved character should be employed in form configs and field configs but never employed in form names or field names.
 
@@ -112,7 +131,7 @@ In addition, since form names should never contain the reserved character in the
 
 Field names should never include the reserved character in the leading position to ensure they are not incorrectly parsed as configs by the application.
 
-## Examples
+### Examples
 
 Here are some example forms implemented with different approaches, where configs are denoted using leading underscores. Note `Pass_Field` has a field-specific configs, which theoretically makes the field's appearance depend on a specific value in `Radio_Field`. Further, `Text_Field` includes a condition that the output data must be at least six characters long.
 
@@ -472,3 +491,6 @@ sample-form:
   }
 }
 ```
+
+
+## Communication Protocol
