@@ -22,6 +22,8 @@
         2. [YAML](#yaml)
         3. [JSON](#json)
 3. [Communication Protocol](#communication-protocol)
+    1. [Metadata](#metadata)
+    2. [HTTP Requests](#http-requests)
 
 
 ## Overview
@@ -43,27 +45,35 @@ After a form is submitted by an end user, the client will process the form data 
 
 This term is used to refer to configuration files containing form-building data, as shown in the [examples](#examples) below. Unfortunately, this term may appear confusing when used alongside terms like [form configs](#form-configs), which refer to specific configurations applied on a form-by-form basis and employ [reserved characters](#reserved-characters) to set themselves apart from [form fields](#form-fields).
 
-#### Network
+#### Distributed
 
-This term is used, often alongside similar terms like 'distributed' or 'RESTful', to describe environments where form data is transferred over a network, for example using HTTP methods like `GET` and `POST`.
+This term is used to describe environments where form data is transferred over a network, for example using HTTP methods like `GET` and `POST`, to allow web clients to communicate form data submitted by end users back to a server using approaches like REST or GraphQL.
 
-#### Declarative 
-
-This term is used to describe a type of [form configuration](#form-configuration) that describes how forms should look and behave, without actually needing to write the logic that achieves that end state.
 
 ### Assumptions
 
-- HTTP/S
+The API carries with it a few implied assumptions.
 
-- Web-based forms
 
-- Document-style database
+#### Form data transferred using HTTP requests
 
-- single reserved character used consistently throughout
+This API presumes that form data will be transferred using HTTP requests when deployed in a server-client configuration. 
+
+#### Form data collected using HTML forms
+
+This API presumes that form data will be collected collected using HTML forms in the web client. 
+
+#### Form data stored in schemaless databases
+
+This API presumes that form data will be stored in schemaless database, like a document database, to ensure that that the server doesn't need to know the structure of the form data it is receiving ahead of time. In addition, this approach supports easy prototyping and changes to form configurations, without breaking the backend server or requiring a copy of the form configuration to reside there. 
+
+#### Single reserved character employed for form configs, metadata, and deprecated form names
+
+While there is no requirement that implementers only employ a single reserved character across the entire application, this API presumes that the same reserved character will be employed to designate form configs, form metadata, and form names that have been deprecated. 
 
 ### Architecture
 
-The API is well-suited to a RESTful or distributed approach, where various clients might manage different forms and employ different access controls, but store form data using a remote server accessed by API token. The use of reserved characters is especially useful in helping implementers build assumptions about the form data they will receive over the network: namely, that no data passed to the server that contains the reserved character in its name is form data, but instead can be treated as form metadata. This approach has the added benefit of decoupling the frontend form fields from the resultant backend data structures. Generally, RESTful approaches will store a separate, unique form configuration on each client, and the server will store minimal form configuration data, if any.
+This API is well-suited to a RESTful or distributed implementation, where various clients might manage different forms and employ different access controls, but store form data using a remote server accessed by API key. The use of reserved characters is especially useful in helping implementers build assumptions about the form data they will receive over the network: namely, that no data passed to the server that contains the reserved character in its name is form data, but instead can be treated as form metadata. This approach has the added benefit of decoupling the frontend form fields from the resultant backend data structures. Generally, RESTful approaches will store a separate, unique form configuration on each client, and the server will store minimal form configuration data, if any.
 
 ![example RESTful architecture](assets/RESTful_libreForms_Architecture.drawio.svg)
 
@@ -74,12 +84,22 @@ The API works just as effectively in an all-in-one application where the submiss
 
 ### Security
 
+This API carries with it an implicit security concern regarding access to form data stored on the server by clients that have unscoped access to the data on the database.
+
 - Control over scope at the server level
 - Clients by default should not be able to see / query each other's form data - enforced through the API key scope
 - Admin console or programmatically determine scope.
 - clients handle auth at their level - within organizations, externalized auth (AD, OAUTH) highly recommended for consistency across clients (and consistency of the data stored on the backend, which does not clean up data by default)
 - form configurations exist at the client level, and need not share with each other
 
+
+API keys specifically require 
+
+- scope determined at time API key token generated, and in subsequent modifications
+    - automated API key generations must check scope and should grant access to the forms requested by client, and raise issues if it conflicts with existing form data
+    - Recommended: manually-generated (eg. by admins using a CLI or admin console) API keys should have their scope modified as needed to account for changes to form names
+- By default, clients granted scoped access to form `form_name` should also be given access to the deprecated version of that form name `_form_name`
+- Migrations (eg. after changes to form names) will require direct action by administrators to modify the database and scoped access granted to the client API keys
 
 ### Principles
 
@@ -494,3 +514,8 @@ sample-form:
 
 
 ## Communication Protocol
+
+
+### Metadata
+
+### HTTP Requests
