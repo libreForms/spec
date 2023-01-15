@@ -33,7 +33,8 @@ At its core, the libreForms configuration language divides a form into its field
 
 A config is an element of a form that an end user does not necessarily see or interact with, but which modifies the behavior of the form in the client. Configs are generally denoted in their name using some [reserved character](#reserved-characters), like a leading underscore, though implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules. The following visualization gives an example of a traditional form (left) and that same form written as a libreForms form configuration (right).
 
-<div style="text-align: center;">![Form example](assets/Example_form.drawio.svg)</div>
+
+<p align="center"><img src="assets/Example_form.drawio.svg"></img></p>
 
 After a form is submitted by an end user, the client will process the form data such that each field conforms to the data type described in its output specification. At this point, the form data can be communicated to a server over a network using HTTP requests. Because configs generally define behavior in the client, and as a result will not pass to the server, the same [reserved character](#reserved-characters) used for configs can be used for metadata that the server will store. This means that the server does not need to know the structure of the data, nor access a copy of the form configuration.
 
