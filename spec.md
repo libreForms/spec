@@ -21,7 +21,6 @@
       - [Python dictionaries](#python-dictionaries)
       - [YAML](#yaml)
       - [JSON](#json)
-
 3. [Communication Protocol](#communication-protocol)
 
 
