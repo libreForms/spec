@@ -30,6 +30,10 @@
 
 This document describes the libreForms API, a form configuration language, and associated communication protocol built on HTTP requests, optimized for managing institutional forms over a network. 
 
+Modern bureaucracies often rely on complex processes that tend to [send you mad](https://www.youtube.com/watch?v=JtEkUmYecnk). These processes are typically built around the idea of standardized institutional forms. An organization may have a form called `Form 29-A: request for funding`, which allows personnel to request non-travel, non-conference funding for a short-term project or work need. Once this form is completed, it then needs to be reviewed by three levels of management, acknowledged by budget personnel, and then routed back to the original submitter to include with their receipts when submitting for reimbursement. 
+
+In more technical language, institutional form data has a tendency to require multiple users with varying institutional roles to access and modify individual records of form data in processes that vary in their formality and clarity. The libreForms API is optimized managing and simplifying data in such environments. 
+
 At its core, the libreForms configuration language divides a form into its fields and configs. A field is an element of a form that an end user will generally see and interact with. Fields are generally comprised of input and output specifications. Input specifications describe the type of field the end user will see and interact with. Output specifications describe the data type and/or structure that the field data will be treated as after the form is submitted. 
 
 A config is an element of a form that an end user does not necessarily see or interact with, but which modifies the behavior of the form in the client. Configs are generally denoted in their name using some [reserved character](#reserved-characters), like a leading underscore, though implementers have significant flexibility to arbitrarily define the behavior resulting from the above rules. The following visualization gives an example of a traditional form (left) and that same form written as a libreForms form configuration (right).
