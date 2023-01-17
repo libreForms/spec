@@ -47,7 +47,19 @@ This term is used to refer to configuration files containing form-building data,
 
 #### Distributed
 
-This term is used to describe environments where form data is transferred over a network, for example using HTTP methods like `GET` and `POST`, to allow web clients to communicate form data submitted by end users back to a server using approaches like REST or GraphQL.
+This term is used to describe environments where form data is transferred over a network, for example using HTTP methods like `GET`, `PUT`, and `POST`, to allow web clients to communicate form data submitted by end users back to a server using approaches like REST or GraphQL.
+
+#### Form data
+
+This term refers to the data submitted by end users when they submit forms.
+
+#### Configs
+
+This term refers to the data that is used to define behavior of forms, but which may not be visible to end users, especially at the client level.
+
+#### Metadata
+
+This term refers to the data, other than form data, that is passed to server (in distributed environments) and database to provide additional, contextualizing information about the form. Examples of metadata might include the source IP address, timestamp, or username of the submitter.
 
 
 ### Assumptions
@@ -61,11 +73,15 @@ This API presumes that form data will be transferred using HTTP requests when de
 
 #### Form data collected using HTML forms
 
-This API presumes that form data will be collected collected using HTML forms in the web client. 
+This API presumes that form data will be collected using HTML forms in the web client. 
 
 #### Form data stored in schemaless databases
 
 This API presumes that form data will be stored in schemaless database, like a document database, to ensure that that the server doesn't need to know the structure of the form data it is receiving ahead of time. In addition, this approach supports easy prototyping and changes to form configurations, without breaking the backend server or requiring a copy of the form configuration to reside there. 
+
+#### Configs define behavior at the client level, but not necessarily beyond that
+
+In distributed environments, the server may not know exactly what's happening at the client level. In fact, the more clients a server is receiving data from, the more generalized its interactions with them will probably need to be. To that end, this API presumes that configs will always apply to behavior at the client level, but that they might not apply to behavior at the server level - especially in distributed or RESTful environments. Instead, we treat data, other than form data, traded between server and client (and server and database) as metadata. 
 
 #### Single reserved character employed for form configs, metadata, and deprecated form names
 
@@ -121,7 +137,7 @@ This approach places a heavy emphasis on clearly-defined default behavior to ser
 
 ### Form Fields
 
-These components define the structure of the form data generated from user input. Each form field should contain details about the input and output data, while optionally including more granular field config details.
+These components define the structure of the form data generated from end user input. Each form field should contain details about the input and output data, while optionally including more granular field config details.
 
 #### Input specifications
 
@@ -143,11 +159,11 @@ These components define form behavior at the client and application level, but a
 
 As discussed above, this approach relies heavily upon the judicious use of reserved characters to denote aspects of the form that should not be made visible to end users but rather parsed in some other way. Typically, a leading underscore is used but can be replaced by implementers with a character better suited to their needs. This reserved character should be employed in form configs and field configs but never employed in form names or field names.
 
-This approach allows implementers to build a few assumptions into how they manage their forms. First, knowing that form field data will never contain the reserved character in the leading position allows the application backend to employ that character for its own metadata, which may significantly overlap with or differ from the form and field configs, when writing to the datastore. 
+This approach allows implementers to build a few assumptions into how they manage their forms. First, knowing that form field data will never contain the reserved character in the leading position allows the application backend to employ that character for its own metadata, which may significantly overlap with or differ from the form and field configs, when writing to the database. 
 
 For example, let's say an implementer is employing a Document database to store form data. They want to store a nested metadata field, which they don't want to be treated like actual form data. They can add a field called `_metadata` during form post-processing with the confidence that this will not collide with any form fields. This is especially useful when you do not know the structure of the form data you are managing at the time of implementation.
 
-In addition, since form names should never contain the reserved character in the leading position, implementers can use this to retire forms submissions or mark them for deletion without removing them from the datastore entirely (`move COLLECTION.SUBMISSION_ID to _COLLECTION`), removing it from the collection of forms that will be parsed by the application. 
+In addition, since form names should never contain the reserved character in the leading position, implementers can use this to retire forms submissions or mark them for deletion without removing them from the database entirely (`move COLLECTION.SUBMISSION_ID to _COLLECTION`), removing it from the collection of forms that will be parsed by the application. 
 
 Field names should never include the reserved character in the leading position to ensure they are not incorrectly parsed as configs by the application.
 
@@ -518,4 +534,67 @@ sample-form:
 
 ### Metadata
 
+In the configuration language defined above, reserved characters are used to designate configs at the client level but, since these are not expected to extend beyond the client, the same reserved characters can be used to designate metadata when data is passed to the server and database.
+
+This approach can be applied flexibly. For example, the following data structure nests the majority of the metadata fields under a `_Metadata` parent field. 
+
+```json
+{
+  "_id": "63c48bc4c953a17a2622511e",
+  "Link": "https://products.example.com/sd/0skdass-kms3",
+  "Cost": "$19.99",
+  "Comments": "This item is needed to support ongoing efforts to develop an autonomous trash collection drone",
+  "Item": "Servo motor kit",
+  "Program": "Robotics",
+  "Project": "GarbageDrone",
+  "_Metadata": {
+    "Reporter": "smithj",
+    "IP_Address": "92.28.144.72",
+    "Timestamp": "2023-01-15 23:27:00.900567",
+    "Owner": "smithj",
+  }
+}
+```
+
+However, this metadata could also be handled without nesting by simply prepending each field name with the reserved character.
+
+```json
+{
+  "_id": "63c48bc4c953a17a2622511e",
+  "Link": "https://products.example.com/sd/0skdass-kms3",
+  "Cost": "$19.99",
+  "Comments": "This item is needed to support ongoing efforts to develop an autonomous trash collection drone",
+  "Item": "Servo motor kit",
+  "Program": "Robotics",
+  "Project": "GarbageDrone",
+  "_Reporter": "smithj",
+  "_IP_Address": "92.28.144.72",
+  "_Timestamp": "2023-01-15 23:27:00.900567",
+  "_Owner": "smithj",
+}
+```
+
+Both approaches may work well, depending on the taste of the implementer and their preferred methods of accessing form metadata.
+
 ### HTTP Requests
+
+Given the above approach for handling metadata, data traded over a network using HTTP requests should conform to the same rules. Form data should not include the reserved character, and metadata should. Take the following example of a PUT request using the Python requests library, which gives an example of how data may move from client to server in a distributed or RESTful environment.
+
+```python
+
+url = 'https://example.libreforms.com/api/u_M1rbaa76VeJOzrDVQjQA/budget_request/create'
+data = {
+  "Link": "https://products.example.com/sd/0skdass-kms3",
+  "Cost": "$19.99",
+  "Comments": "This item is needed to support ongoing efforts to develop an autonomous trash collection drone",
+  "Item": "Servo motor kit",
+  "Program": "Robotics",
+  "Project": "GarbageDrone",
+  "_Reporter": "smithj",
+  "_IP_Address": "92.28.144.72",
+  "_Timestamp": "2023-01-15 23:27:00.900567",
+  "_Owner": "smithj",
+}
+
+x = requests.put(url, data)
+```
