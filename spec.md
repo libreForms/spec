@@ -55,7 +55,7 @@ This term is used to describe environments where form data is transferred over a
 
 #### Form data
 
-This term refers to the data submitted by end users when they submit forms.
+This term refers to the data provided by end users when they prepare and submit forms.
 
 #### Configs
 
