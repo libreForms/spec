@@ -550,10 +550,10 @@ This approach can be applied flexibly. For example, the following data structure
   "Program": "Robotics",
   "Project": "GarbageDrone",
   "_Metadata": {
-    "Reporter": "smithj",
+    "Reporter": "john.smith",
     "IP_Address": "92.28.144.72",
     "Timestamp": "2023-01-15 23:27:00.900567",
-    "Owner": "smithj",
+    "Owner": "john.smith",
   }
 }
 ```
@@ -569,10 +569,10 @@ However, this metadata could also be handled without nesting by simply prependin
   "Item": "Servo motor kit",
   "Program": "Robotics",
   "Project": "GarbageDrone",
-  "_Reporter": "smithj",
+  "_Reporter": "john.smith",
   "_IP_Address": "92.28.144.72",
   "_Timestamp": "2023-01-15 23:27:00.900567",
-  "_Owner": "smithj",
+  "_Owner": "john.smith",
 }
 ```
 
@@ -592,10 +592,10 @@ data = {
   "Item": "Servo motor kit",
   "Program": "Robotics",
   "Project": "GarbageDrone",
-  "_Reporter": "smithj",
+  "_Reporter": "john.smith",
   "_IP_Address": "92.28.144.72",
   "_Timestamp": "2023-01-15 23:27:00.900567",
-  "_Owner": "smithj",
+  "_Owner": "john.smith",
 }
 
 x = requests.put(url, data)
